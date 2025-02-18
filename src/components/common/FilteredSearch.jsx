@@ -1,7 +1,11 @@
 import { Input } from "@shadcn/input";
-import { useEffect, useState } from "react";
+import { useEffect, useContext } from "react";
 import { ComboBoxResponsive } from "@shadcn/combobox";
+import { SearchContext } from "../../context/SearchContext";
+
 function FilteredSearch() {
+  const { searchQuery, setSearchQuery, setFilters } = useContext(SearchContext);
+
   const characters = [
     {
       value: "ironclad",
@@ -53,10 +57,6 @@ function FilteredSearch() {
       value: "power",
       label: "Power",
     },
-    {
-      value: "rare",
-      label: "Rare",
-    },
   ];
 
   const cardFunctions = [
@@ -77,11 +77,18 @@ function FilteredSearch() {
       label: "Draw",
     },
     {
-      value: "characterMechanic",
+      value: "character mechanic",
       label: "Character Mechanic",
     },
   ];
-  const [searchQuery, setSearchQuery] = useState("");
+
+  function handleFilterChange(type, value) {
+    console.log("Filter: ", type, value);
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [type]: value,
+    }));
+  }
 
   function handleSearchKeyDown(event) {
     if (event.key === "k" && (event.ctrlKey || event.metaKey)) {
@@ -106,10 +113,26 @@ function FilteredSearch() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <ComboBoxResponsive options={characters} title="Character" />
-      <ComboBoxResponsive options={rarities} title="Rarity" />
-      <ComboBoxResponsive options={cardTypes} title="Type" />
-      <ComboBoxResponsive options={cardFunctions} title="Function" />
+      <ComboBoxResponsive
+        options={characters}
+        title="Character"
+        onChange={(value) => handleFilterChange("character", value)}
+      />
+      <ComboBoxResponsive
+        options={rarities}
+        title="Rarity"
+        onChange={(value) => handleFilterChange("rarity", value)}
+      />
+      <ComboBoxResponsive
+        options={cardTypes}
+        title="Type"
+        onChange={(value) => handleFilterChange("type", value)}
+      />
+      <ComboBoxResponsive
+        options={cardFunctions}
+        title="Function"
+        onChange={(value) => handleFilterChange("function", value)}
+      />
     </div>
   );
 }

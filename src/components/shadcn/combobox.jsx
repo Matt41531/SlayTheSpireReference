@@ -25,33 +25,18 @@ import {
   PopoverTrigger,
 } from "@/components/shadcn/popover";
 
-// const statuses = [
-//   {
-//     value: "backlog",
-//     label: "Backlog",
-//   },
-//   {
-//     value: "todo",
-//     label: "Todo",
-//   },
-//   {
-//     value: "in progress",
-//     label: "In Progress",
-//   },
-//   {
-//     value: "done",
-//     label: "Done",
-//   },
-//   {
-//     value: "canceled",
-//     label: "Canceled",
-//   },
-// ]
-
-export function ComboBoxResponsive({ options, title }) {
+export function ComboBoxResponsive({ options, title, onChange }) {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [selectedStatus, setSelectedStatus] = React.useState(null);
+
+  const handleSelect = (value) => {
+    const isCurrentlySelected = selectedStatus?.value === value;
+    const newStatus = isCurrentlySelected ? null : options.find((selection) => selection.value === value) || null;
+    setSelectedStatus(newStatus);
+    onChange(newStatus ? newStatus.value : null);
+    setOpen(false);
+  };
 
   if (isDesktop) {
     return (
@@ -70,6 +55,7 @@ export function ComboBoxResponsive({ options, title }) {
             setSelectedStatus={setSelectedStatus}
             selectedStatus={selectedStatus}
             options={options}
+            onSelect={handleSelect}
           />
         </PopoverContent>
       </Popover>
@@ -99,6 +85,7 @@ export function ComboBoxResponsive({ options, title }) {
             setSelectedStatus={setSelectedStatus}
             selectedStatus={selectedStatus}
             options={options}
+            onSelect={handleSelect}
           />
         </div>
       </DrawerContent>
@@ -106,7 +93,7 @@ export function ComboBoxResponsive({ options, title }) {
   );
 }
 
-function StatusList({ setOpen, setSelectedStatus, selectedStatus, options }) {
+function StatusList({ selectedStatus, options, onSelect }) {
   return (
     <Command>
       <CommandInput placeholder="Filter status..." />
@@ -117,18 +104,7 @@ function StatusList({ setOpen, setSelectedStatus, selectedStatus, options }) {
             <CommandItem
               key={option.value}
               value={option.value}
-              onSelect={(value) => {
-                const isCurrentlySelected = selectedStatus?.value === value;
-                if (isCurrentlySelected) {
-                  setSelectedStatus(null);
-                } else {
-                  setSelectedStatus(
-                    options.find((selection) => selection.value === value) ||
-                      null,
-                  );
-                }
-                setOpen(false);
-              }}
+              onSelect={onSelect}
               className="flex items-center justify-between"
             >
               <span>{option.label}</span>
@@ -142,8 +118,3 @@ function StatusList({ setOpen, setSelectedStatus, selectedStatus, options }) {
     </Command>
   );
 }
-
-// StatusList.propTypes = {
-//   setOpen: PropTypes.func.isRequired,
-//   setSelectedStatus: PropTypes.func.isRequired
-// }

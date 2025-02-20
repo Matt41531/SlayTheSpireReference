@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { supabase } from "../../../supabaseClient";
 import { useState, useEffect, useContext } from "react";
 import { SearchContext } from "../../context/SearchContext";
@@ -6,6 +5,7 @@ import { SearchContext } from "../../context/SearchContext";
 function Cards() {
   const [cards, setCards] = useState([]);
   const { searchQuery, filters } = useContext(SearchContext);
+  const [selectedCardId, setSelectedCardId] = useState(null);
 
   useEffect(() => {
     getFilteredCards(filters, searchQuery);
@@ -38,10 +38,18 @@ function Cards() {
     }
   }
 
+  const handleCardClick = (id) => {
+    setSelectedCardId(selectedCardId === id ? null : id);
+  };
+
   return (
     <div className="flex flex-wrap gap-4 flex-1">
       {cards.map((card) => (
-        <div key={card.id} className="bg-white rounded-lg shadow-md">
+        <div 
+          key={card.id} 
+          className={`bg-white rounded-lg shadow-md ${selectedCardId === card.id ? 'scale-150 transition-all duration-300' : ''}`}
+          onClick={() => handleCardClick(card.id)}
+        >
           <img
             src={card.card_img}
             alt={card.card_name}

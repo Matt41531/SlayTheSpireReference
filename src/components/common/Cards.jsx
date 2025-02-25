@@ -43,11 +43,11 @@ function Cards() {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 flex-1">
+    <div className="flex flex-wrap gap-4 flex-1 p-8">
       {cards.map((card) => (
         <div 
           key={card.id} 
-          className={`bg-white rounded-lg shadow-md ${selectedCardId === card.id ? 'scale-150 transition-all duration-300' : ''}`}
+          className={`bg-white rounded-lg shadow-md ${selectedCardId === card.id ? 'scale-150 transition-all duration-300 z-50' : ''}`}
           onClick={() => handleCardClick(card.id)}
         >
           <img

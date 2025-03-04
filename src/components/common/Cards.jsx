@@ -43,7 +43,7 @@ function Cards() {
   };
 
   return (
-    <div className="flex flex-wrap gap-4 flex-1 p-8">
+    <div className="flex flex-wrap gap-4 justify-center items-center p-8">
       {cards.map((card) => (
         <div 
           key={card.id} 

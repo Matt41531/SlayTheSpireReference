@@ -69,8 +69,8 @@ function FilteredSearch() {
       label: "Block",
     },
     {
-      value: "heal",
-      label: "Heal",
+      value: "energy",
+      label: "Energy",
     },
     {
       value: "draw",
